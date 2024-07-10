@@ -44,7 +44,7 @@ namespace Game.Obstacle
                     // Instantiate an obstacle prefab (red sphere) for each obstacle
                     if (_obstacleDataSO.obstacles[y * _tileManager.GridSize + x])
                     {
-                        GameObject obstacle = Instantiate(_obstaclePrefab, spawnPos, Quaternion.identity);
+                        GameObject obstacle = Instantiate(_obstaclePrefab, spawnPos, Quaternion.identity,transform);
                         _tileManager.TileList[y * _tileManager.GridSize + x].TileState = TileState.Blocked; // block the tiles
                     }
                 }

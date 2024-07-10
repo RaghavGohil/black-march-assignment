@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.Events;
 
 namespace Game.Tile 
@@ -37,6 +38,14 @@ namespace Game.Tile
                 _tileList.AddRange(tileComponentsInHierarchy);
             }
         }
+
+        public Tile GetTileAtPosition(Vector3Int position) 
+        {
+            return _tileList
+                    .Where(tile => tile.transform.position == position)
+                    .FirstOrDefault();
+        }
+
     }
 }
 
