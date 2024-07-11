@@ -4,14 +4,13 @@
  * **/
 
 using UnityEngine;
-using Game.Tile;
 
 namespace Game.Obstacle 
 {
     [CreateAssetMenu(fileName = "ObstacleDataSO", menuName = "ScriptableObjects/ObstacleData")]
     public class ObstacleDataSO : ScriptableObject
     {
-        public bool[] obstacles = new bool[100];
+        public bool[] obstacles;
     }
 }
 

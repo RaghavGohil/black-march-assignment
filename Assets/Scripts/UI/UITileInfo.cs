@@ -4,7 +4,7 @@
 
 using UnityEngine;
 using TMPro;
-using Game.Tile;
+using Game.InputSystem;
 
 namespace Game.UI 
 {
@@ -12,7 +12,7 @@ namespace Game.UI
     {
         [SerializeField] private TMP_Text _unitInfoText;
 
-        [SerializeField] private TileSelector _tileSelector;
+        [SerializeField] private TileInput _tileSelector;
 
         private void Start()
         {

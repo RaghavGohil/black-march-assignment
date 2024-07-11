@@ -11,13 +11,13 @@ namespace Game.Tile
 {
     public class TileManager : MonoBehaviour
     {
-        private readonly int _gridSize = 10;
-        public int GridSize => _gridSize;
+        private readonly uint _gridSize = 10;
+        public uint GridSize => _gridSize;
 
         private List<Tile>_tileList;
         public List<Tile> TileList => _tileList;
 
-        public UnityEvent OnTileManagerInitialized;
+        [HideInInspector] public UnityEvent OnTileManagerInitialized;
 
         private void Start()
         {

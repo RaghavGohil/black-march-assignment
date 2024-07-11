@@ -1,8 +1,3 @@
-/**
- * TileObstacleEditorWindow is responsible for creating an editor window tool which contains toggleable
- * buttons which is stored in the 'ObstacleDataSO' for generating obstacles.
- * **/
-
 #if UNITY_EDITOR
 
 using UnityEngine;
@@ -11,7 +6,9 @@ using Game.Obstacle;
 
 public class TileObstacleEditorWindow : EditorWindow
 {
-    private ObstacleDataSO obstacleData;
+    private uint _gridSize;
+    private ObstacleDataSO _obstacleData;
+    private bool _obstacleDataInitialized;
 
     [MenuItem("Window/Tile Obstacle Editor")]
     public static void ShowWindow()
@@ -21,37 +18,45 @@ public class TileObstacleEditorWindow : EditorWindow
 
     void OnGUI()
     {
-        GUILayout.Label("Obstacle Grid Editor", EditorStyles.boldLabel);
+        GUILayout.Label("Tile Obstacle Editor", EditorStyles.boldLabel);
 
-        if (obstacleData == null)
+        if (_obstacleData == null)
         {
+            EditorGUILayout.BeginVertical();
+            _gridSize = (uint)Mathf.Clamp(EditorGUILayout.IntField("Grid Size", (int)_gridSize), 1, int.MaxValue);
+
             if (GUILayout.Button("Create New Obstacle Data"))
             {
                 CreateNewObstacleData();
             }
-            obstacleData = (ObstacleDataSO)EditorGUILayout.ObjectField("Obstacle Data", obstacleData, typeof(ObstacleDataSO), false);
+
+            EditorGUILayout.EndVertical();
             return;
+        }
+
+        if (!_obstacleDataInitialized)
+        {
+            _gridSize = (uint)Mathf.Sqrt(_obstacleData.obstacles.Length);
+            _obstacleDataInitialized = true;
         }
 
         if (GUILayout.Button("Save Obstacle Data"))
         {
-            EditorUtility.SetDirty(obstacleData);
+            EditorUtility.SetDirty(_obstacleData);
             AssetDatabase.SaveAssets();
         }
 
-        SerializedObject serializedObject = new SerializedObject(obstacleData);
+        SerializedObject serializedObject = new SerializedObject(_obstacleData);
         SerializedProperty obstaclesProperty = serializedObject.FindProperty("obstacles");
 
         serializedObject.Update();
 
-        var gridSize = Mathf.Sqrt(obstaclesProperty.arraySize);
-
-        for (int y = 0; y < gridSize; y++)
+        for (int y = 0; y < _gridSize; y++)
         {
             EditorGUILayout.BeginHorizontal();
-            for (int x = 0; x < gridSize; x++)
+            for (int x = 0; x < _gridSize; x++)
             {
-                int index = y * (int)gridSize + x;
+                int index = y * (int)_gridSize + x;
                 obstaclesProperty.GetArrayElementAtIndex(index).boolValue = GUILayout.Toggle(obstaclesProperty.GetArrayElementAtIndex(index).boolValue, "");
             }
             EditorGUILayout.EndHorizontal();
@@ -63,10 +68,12 @@ public class TileObstacleEditorWindow : EditorWindow
     private void CreateNewObstacleData()
     {
         ObstacleDataSO newObstacleData = CreateInstance<ObstacleDataSO>();
+        newObstacleData.obstacles = new bool[_gridSize * _gridSize];
         AssetDatabase.CreateAsset(newObstacleData, "Assets/ObstacleData.asset");
         AssetDatabase.SaveAssets();
 
-        obstacleData = newObstacleData;
+        _obstacleData = newObstacleData;
+        _obstacleDataInitialized = true;
     }
 }
 

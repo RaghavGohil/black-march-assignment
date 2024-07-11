@@ -22,6 +22,7 @@ namespace Game.Obstacle
             if (_tileManager == null)
             {
                 Debug.LogError("Tile Manager not found!");
+                enabled = false; //Fail early if tile manager is not found.
             }
             else 
             {
@@ -34,18 +35,35 @@ namespace Game.Obstacle
         /// </summary>
         private void GenerateObstacles() 
         {
-            // Generate visual representation of the grid
-            for (int x = 0; x < _tileManager.GridSize; x++)
+
+            if (_obstacleDataSO == null) 
             {
-                for (int y = 0; y < _tileManager.GridSize; y++)
+                Debug.LogError("Obstacle data is null!");
+                return;
+            }
+
+            if (_obstaclePrefab == null)
+            {
+                Debug.LogError("Obstacle prefab is null!");
+                return;
+            }
+
+            var obstacleGridSize = (int) Mathf.Sqrt(_obstacleDataSO.obstacles.Length);
+
+            // Generate visual representation of the grid
+            for (int x = 0; x < obstacleGridSize; x++)
+            {
+                for (int y = 0; y < obstacleGridSize; y++)
                 {
                     Vector3 spawnPos = new Vector3(x, _obstacleVerticalOffset , y);
 
+                    Debug.Log($"{y} {x}");
+
                     // Instantiate an obstacle prefab (red sphere) for each obstacle
-                    if (_obstacleDataSO.obstacles[y * _tileManager.GridSize + x])
+                    if (_obstacleDataSO.obstacles[y * obstacleGridSize + x])
                     {
                         GameObject obstacle = Instantiate(_obstaclePrefab, spawnPos, Quaternion.identity,transform);
-                        _tileManager.TileList[y * _tileManager.GridSize + x].TileState = TileState.Blocked; // block the tiles
+                        _tileManager.TileList[y * obstacleGridSize + x].TileState = TileState.Blocked; // block the tiles
                     }
                 }
             }
