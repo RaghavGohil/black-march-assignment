@@ -39,10 +39,16 @@ namespace Game.Tile
             }
         }
 
-        public Tile GetTileAtPosition(Vector3Int position) 
+        /// <summary>
+        /// Gets tile at position in the grid.
+        /// </summary>
+        /// <param name="position">Vector2 position is needed. The Y position is not necessary</param>
+        /// <returns>Type 'Tile' at position</returns>
+        public Tile GetTileAtPosition(Vector2Int position) 
         {
             return _tileList
-                    .Where(tile => tile.transform.position == position)
+                    .Where(tile => tile.transform.position.x == position.x
+                                && tile.transform.position.z == position.y)
                     .FirstOrDefault();
         }
 

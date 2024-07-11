@@ -42,7 +42,6 @@ public class TileObstacleEditorWindow : EditorWindow
 
         if (GUILayout.Button("Save Obstacle Data"))
         {
-            EditorUtility.SetDirty(_obstacleData);
             AssetDatabase.SaveAssets();
         }
 

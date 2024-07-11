@@ -57,13 +57,11 @@ namespace Game.Obstacle
                 {
                     Vector3 spawnPos = new Vector3(x, _obstacleVerticalOffset , y);
 
-                    Debug.Log($"{y} {x}");
-
                     // Instantiate an obstacle prefab (red sphere) for each obstacle
-                    if (_obstacleDataSO.obstacles[y * obstacleGridSize + x])
+                    if (_obstacleDataSO.obstacles[x * obstacleGridSize + y])
                     {
                         GameObject obstacle = Instantiate(_obstaclePrefab, spawnPos, Quaternion.identity,transform);
-                        _tileManager.TileList[y * obstacleGridSize + x].TileState = TileState.Blocked; // block the tiles
+                        _tileManager.TileList[x * obstacleGridSize + y].TileState = TileState.Blocked; // block the tiles
                     }
                 }
             }

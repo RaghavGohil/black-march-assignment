@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 5324602541667352034}
   - component: {fileID: 5476879857438153326}
   - component: {fileID: 239487418077904748}
-  - component: {fileID: -5048618692661363728}
+  - component: {fileID: -6312642662432270375}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: adf863393bf92ec4cb2be8af0649d003, type: 2}
+  - {fileID: 2100000, guid: fc24b34cd51ed0346847fccb1c7d8a89, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,7 +108,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-5048618692661363728
+--- !u!114 &-6312642662432270375
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,6 +117,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7274492085769915217}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97238531d2298b044b9738564a9fe18a, type: 3}
+  m_Script: {fileID: 11500000, guid: cb135e32e138db348b5cee0dc2af59f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -21,7 +21,7 @@ namespace Game.Tile
         private Vector3Int _gridPosition;
         [HideInInspector] public Vector3Int GridPosition => _gridPosition;
 
-        public UnityEvent OnTileStateChange;
+        [HideInInspector]public UnityEvent OnTileStateChange;
         public TileState _tileState;
 
         /// <summary>
