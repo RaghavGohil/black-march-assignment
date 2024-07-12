@@ -57,9 +57,13 @@ namespace Game.Entity
         protected void MoveToTile(Tile.Tile tile)
         {
             List<Tile.Tile> moves = _pathfinder.FindPath(_currentTile, tile); //Do algorithm, find path..
-            if (moves != null) 
+            if (moves != null)
             {
                 StartCoroutine(MoveAI(moves));
+            }
+            else 
+            {
+                HandleNoMovesLeft();
             }
         }
 
@@ -72,6 +76,8 @@ namespace Game.Entity
         {
             tile.TileState = TileState.Walkable;
         }
+
+        public virtual void HandleNoMovesLeft() { }
 
         public virtual IEnumerator MoveAI(List<Tile.Tile> moves) { yield return null; } // overridden by implementation
     }

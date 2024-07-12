@@ -6,7 +6,7 @@ using Game.AI;
 
 namespace Game.Entity 
 {
-    public class Player : Entity, IAI
+    public class Player : Entity
     {
 
         private TileInput _tileInput;

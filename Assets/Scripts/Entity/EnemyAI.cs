@@ -38,6 +38,12 @@ namespace Game.Entity
             }
         }
 
+        public override void HandleNoMovesLeft()
+        {
+            base.HandleNoMovesLeft();
+            GameManager.Instance.EndEnemyTurn();
+        }
+
         /// <summary>
         /// An override method called by MoveToTile when there is a turn.
         /// The function checks if there less than or equal to one move.
@@ -61,43 +67,54 @@ namespace Game.Entity
 
             ResetTile(_currentTile);
 
-            /********* Rotate the enemy to the path *********/
+            Vector3 currentPosition = transform.position;
 
-            Quaternion targetRotation;
-            
-            float elapsedTime = 0;
-
-            targetRotation  = Quaternion.LookRotation(new Vector3(moves[0].GridPosition.x, 0, moves[0].GridPosition.z)
-                                                                - new Vector3(transform.position.x, 0, transform.position.z), Vector3.up);
-
-            while (elapsedTime < _rotationDuration)
+            foreach (var move in moves)
             {
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, elapsedTime / _rotationDuration);
-                elapsedTime += Time.deltaTime;
-                yield return null;
+
+                if(move == moves[moves.Count - 1]) { break; } // stop right beside player.
+
+                // Calculate target rotation towards the next tile
+                Vector3 direction = new Vector3(move.GridPosition.x, 0, move.GridPosition.z) - new Vector3(transform.position.x, 0, transform.position.z);
+                Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+
+                float elapsedTime = 0;
+
+                /********* Rotate the player to the path *********/
+                if (targetRotation != transform.rotation)
+                {
+                    while (elapsedTime < _rotationDuration) // Also rotate the player
+                    {
+                        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, elapsedTime / _rotationDuration);
+                        elapsedTime += Time.deltaTime;
+                        yield return null;
+                    }
+                    transform.rotation = targetRotation; // Ensure exact rotation at the end
+                }
+
+                elapsedTime = 0;
+
+                /********* Move the player to the path *********/
+                while (elapsedTime < _moveDuration)
+                {
+                    transform.position = Vector3.Lerp(
+                        currentPosition,
+                        new Vector3(move.GridPosition.x, move.GridPosition.y + _aboveTileYOffset, move.GridPosition.z),
+                        elapsedTime / _moveDuration);
+                    elapsedTime += Time.deltaTime;
+                    yield return null; // Wait until the next frame
+                }
+
+                // Ensure exact position at the end of the movement
+                transform.position = new Vector3(move.GridPosition.x, move.GridPosition.y + _aboveTileYOffset, move.GridPosition.z);
+                currentPosition = transform.position;
+                _currentTile = move;
             }
-
-            /********* Move the enemy *********/
-
-            elapsedTime = 0;
-
-            while (elapsedTime < _moveDuration)
-            {
-                transform.position = Vector3.Lerp(
-                    transform.position,
-                    new Vector3(moves[0].GridPosition.x, moves[0].GridPosition.y + _aboveTileYOffset, moves[0].GridPosition.z),
-                    elapsedTime / _moveDuration);
-
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-
-            _currentTile = moves[0];
 
             BlockTile(_currentTile);
 
             _isMoving = false;
-            
+
             GameManager.Instance.EndEnemyTurn();
         }
     }

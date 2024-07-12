@@ -773,9 +773,9 @@ MonoBehaviour:
   _tileManager: {fileID: 977690747}
   _spawnData:
   - EntityGO: {fileID: 6471617640893553020, guid: e1b3c958b6576294a977db5d84984f2f, type: 3}
-    GridPosition: {x: 2, y: 2}
-  - EntityGO: {fileID: 3839302173390268812, guid: 6a0c97faf35f9954981c1acc754fdc6e, type: 3}
     GridPosition: {x: 5, y: 0}
+  - EntityGO: {fileID: 3839302173390268812, guid: 6a0c97faf35f9954981c1acc754fdc6e, type: 3}
+    GridPosition: {x: 2, y: 2}
 --- !u!1 &1862930495
 GameObject:
   m_ObjectHideFlags: 0
