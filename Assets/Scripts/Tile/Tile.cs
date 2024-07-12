@@ -8,6 +8,9 @@ using UnityEngine.Events;
 namespace Game.Tile 
 {
 
+    /// <summary>
+    /// A tile can be blocked so entity will not move on that tile.
+    /// </summary>
     public enum TileState 
     {
         Walkable,

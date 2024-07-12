@@ -1,3 +1,7 @@
+/*
+ * Dynamic cursor system which relies on TileInput to draw the cursor on hover. Can be extensible to add virtually any effect..
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +31,10 @@ namespace Game.Tile
             _tileInput.OnTileHover.AddListener(RenderCursor);
         }
 
+        /// <summary>
+        /// Render cursor in desired position (added as a listener)
+        /// </summary>
+        /// <param name="tile">Input given on tile input hover.</param>
         private void RenderCursor(Tile tile)
         {
             if (_cursor != null)

@@ -1,3 +1,7 @@
+/*
+ * Input manager handles all of the input in game..
+ */
+
 using System;
 using UnityEngine;
 using Game.Tile;
@@ -18,13 +22,16 @@ namespace Game.InputSystem
             }
         }
 
+        /// <summary>
+        /// Handles hover and if not player's turn, there is no need for click event.
+        /// </summary>
         private void Update()
         {
             _tileInput.HandleHover();
 
             if (GameManager.Instance.State != GameManager.GameState.PlayerTurn)
                 return;
-            _tileInput.HandleClick(); // if not player's turn, there is no need for click event.
+            _tileInput.HandleClick();
         }
     }
 }

@@ -238,8 +238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa1b8842bea64004d821c6a7e3ec84a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tileInput: {fileID: 977690746}
   _unitInfoText: {fileID: 1862930497}
-  _tileSelector: {fileID: 977690746}
 --- !u!1 &327726168
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,13 +269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4581c41bb4f50b64ab2bc277fd564ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  State: 0
-  OnPlayerTurn:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEnemyTurn:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &327726170
 Transform:
   m_ObjectHideFlags: 0

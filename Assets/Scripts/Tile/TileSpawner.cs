@@ -1,5 +1,5 @@
 /**
- * TileSpawner is responsible to spawn tiles in game.
+ * TileSpawner is responsible to spawn tiles in game (creates a tile grid).
  * **/
 
 using UnityEngine;

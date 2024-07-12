@@ -10,15 +10,15 @@ namespace Game.UI
 {
     public class UITileInfo : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _unitInfoText;
 
-        [SerializeField] private TileInput _tileSelector;
+        [SerializeField] private TileInput _tileInput;
+        [SerializeField] private TMP_Text _unitInfoText;
 
         private void Start()
         {
-            if (_tileSelector != null)
+            if (_tileInput != null)
             {
-                _tileSelector.OnTileHover.AddListener(UpdateTileInfo);
+                _tileInput.OnTileHover.AddListener(UpdateTileInfo);
             }
             else 
             {
@@ -37,7 +37,7 @@ namespace Game.UI
 
         private void OnDestroy()
         {
-            _tileSelector.OnTileHover?.RemoveListener(UpdateTileInfo);
+            _tileInput.OnTileHover?.RemoveListener(UpdateTileInfo);
         }
     }
 }

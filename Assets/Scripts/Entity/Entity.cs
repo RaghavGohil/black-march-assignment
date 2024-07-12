@@ -8,9 +8,16 @@ namespace Game.Entity
 {
     public abstract class Entity : MonoBehaviour
     {
+        /// <summary>
+        /// Visual y offset above tile
+        /// </summary>
+        [SerializeField] protected float _aboveTileYOffset;
 
-        [SerializeField] protected float _transformYOffset;
+        /// <summary>
+        /// The duration required to move to next tile.
+        /// </summary>
         protected float _moveDuration;
+
         protected bool _isMoving = false;
 
         protected TileManager _tileManager;
@@ -37,7 +44,7 @@ namespace Game.Entity
             _moveDuration = 0.5f;
 
             //Spawn with a y offset above tile.
-            transform.position = new Vector3(_currentTile.GridPosition.x, _currentTile.GridPosition.y + _transformYOffset, _currentTile.GridPosition.z);
+            transform.position = new Vector3(_currentTile.GridPosition.x, _currentTile.GridPosition.y + _aboveTileYOffset, _currentTile.GridPosition.z);
             BlockTile(_currentTile);
         }
 
@@ -51,11 +58,11 @@ namespace Game.Entity
             List<Tile.Tile> moves = _pathfinder.FindPath(_currentTile, tile); //Do algorithm, find path..
             if (moves != null) 
             {
-                StartCoroutine(Move(tile,moves));
+                StartCoroutine(Move(moves));
             }
         }
 
-        protected void BlockTile(Tile.Tile tile) 
+        protected void BlockTile(Tile.Tile tile) // Blocks a tile in game
         {
             tile.TileState = TileState.Blocked;
         }
@@ -65,7 +72,7 @@ namespace Game.Entity
             tile.TileState = TileState.Walkable;
         }
 
-        public virtual IEnumerator Move(Tile.Tile tile, List<Tile.Tile> moves) { yield return null; }
+        public virtual IEnumerator Move(List<Tile.Tile> moves) { yield return null; } // overridden by implementation
     }
 }
 

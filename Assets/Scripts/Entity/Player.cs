@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.InputSystem;
 using Game.AI;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Game.Entity 
 {
@@ -11,6 +10,10 @@ namespace Game.Entity
     {
 
         private TileInput _tileInput;
+
+        /// <summary>
+        /// The next tile is set when the player clicks on a tile.
+        /// </summary>
         private Tile.Tile _nextTile;
 
         private new void Start()
@@ -29,9 +32,15 @@ namespace Game.Entity
             _nextTile = null;
         }
 
+
+        /// <summary>
+        /// The player moves to a tile on turn when the clicked tile is not the current tile.
+        /// The next tile is immediately set to null because when player moves, the next tile is not null
+        /// and the currentTile is not equal to next tile as the Move function updates the current tile on each move.
+        /// </summary>
         private void Update()
         {
-            if (GameManager.Instance.State == GameManager.GameState.PlayerTurn && !_isMoving)
+            if (GameManager.Instance.State == GameManager.GameState.PlayerTurn)
             {
                 if (_nextTile != null && _currentTile != _nextTile) 
                 {
@@ -41,12 +50,27 @@ namespace Game.Entity
             }
         }
 
+        /// <summary>
+        /// Is attached as a listener to the event in TileInput
+        /// also checks if player is moving.
+        /// </summary>
+        /// <param name="tile">gets the current tile from TileInput as it's a listener</param>
         private void GetTileOnClick(Tile.Tile tile) 
         {
-            _nextTile = tile;   
+            if(!_isMoving)
+                _nextTile = tile;   
         }
 
-        public override IEnumerator Move(Tile.Tile tile, List<Tile.Tile> moves) 
+
+        /// <summary>
+        /// An override method called by MoveToTile when there is a turn.
+        /// The player tile reset so it frees the tile to move.
+        /// We move the player entirely to the desired tile, checking each tile position.
+        /// The player current tile is then set to blocked.
+        /// </summary>
+        /// <param name="moves">Gets the moves from the pathfinder ai from MoveToTile</param>
+        /// <returns></returns>
+        public override IEnumerator Move(List<Tile.Tile> moves) 
         {
 
             _isMoving = true;
@@ -60,12 +84,12 @@ namespace Game.Entity
                 {
                     transform.position = Vector3.Lerp(
                         currentPosition,
-                        new Vector3(move.GridPosition.x, move.GridPosition.y + _transformYOffset, move.GridPosition.z),
+                        new Vector3(move.GridPosition.x, move.GridPosition.y + _aboveTileYOffset, move.GridPosition.z),
                         elapsedTime / _moveDuration);
                     elapsedTime += Time.deltaTime;
                     yield return null; // Wait until the next frame
                 }
-                currentPosition = new Vector3(move.GridPosition.x, move.GridPosition.y + _transformYOffset, move.GridPosition.z);
+                currentPosition = new Vector3(move.GridPosition.x, move.GridPosition.y + _aboveTileYOffset, move.GridPosition.z);
                 _currentTile = move;
             }
 
@@ -76,7 +100,7 @@ namespace Game.Entity
 
         private void OnDestroy()
         {
-            _tileInput.OnTileClick.RemoveListener(MoveToTile);
+            _tileInput.OnTileClick.RemoveListener(GetTileOnClick);
         }
     }
 }

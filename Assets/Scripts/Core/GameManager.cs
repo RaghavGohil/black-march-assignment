@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * The Game Manager manages the entire state of the game.
+ * The Game Manager can be extended using state macihnes in order to make the game more scalable.
+ */
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Game
 {
@@ -13,7 +14,7 @@ namespace Game
 
         public static GameManager Instance;
 
-        private void Awake()
+        private void Awake() //Make a singleton instance.
         {
             if (Instance == null)
             {

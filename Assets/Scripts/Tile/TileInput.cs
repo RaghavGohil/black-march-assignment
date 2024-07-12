@@ -2,11 +2,8 @@
  * TileInput is responsible to select tiles and perform actions (like when it is hovered or clicked, etc).
  * **/
 
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 
 namespace Game.InputSystem
 {
