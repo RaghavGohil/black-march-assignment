@@ -14,8 +14,8 @@ namespace Game.Obstacle
         [SerializeField] private ObstacleDataSO _obstacleDataSO;
         [SerializeField] private TileManager _tileManager;
         [SerializeField] private GameObject _obstaclePrefab;
+        [SerializeField] private float _obstacleVerticalOffset;
 
-        private float _obstacleVerticalOffset = 1f;
 
         private void Awake()
         {

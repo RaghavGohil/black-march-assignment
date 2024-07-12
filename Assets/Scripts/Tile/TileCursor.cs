@@ -9,6 +9,7 @@ namespace Game.Tile
     {
         [SerializeField] private TileInput _tileInput;
         [SerializeField] private GameObject _cursorPrefab;
+        [SerializeField] private float _yOffset;
         private GameObject _cursor;
         private void Start()
         {
@@ -29,7 +30,7 @@ namespace Game.Tile
         private void RenderCursor(Tile tile)
         {
             if (_cursor != null)
-                _cursor.transform.position = tile.GridPosition;
+                _cursor.transform.position = new Vector3(tile.GridPosition.x,tile.GridPosition.y+_yOffset,tile.GridPosition.z);
         }
 
         private void OnDestroy()

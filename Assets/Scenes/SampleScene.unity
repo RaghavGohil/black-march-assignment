@@ -571,7 +571,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tileInput: {fileID: 977690746}
-  _cursorPrefab: {fileID: 1228080688242001334, guid: e0178dbc744e5be42bd3f87b83db0bd6, type: 3}
+  _cursorPrefab: {fileID: 3980877667681043504, guid: 49ea7b3a03c4d7d4e89c18cecf6bfd46, type: 3}
+  _yOffset: 0.13
 --- !u!1 &1046678291
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +649,7 @@ MonoBehaviour:
   _obstacleDataSO: {fileID: 11400000, guid: a35545db064486649b420a9e8db43628, type: 2}
   _tileManager: {fileID: 977690747}
   _obstaclePrefab: {fileID: 3073498557259176449, guid: aa812e928123cc9478f6a8971b739801, type: 3}
+  _obstacleVerticalOffset: 0.325
 --- !u!4 &1204564115
 Transform:
   m_ObjectHideFlags: 0
@@ -777,9 +779,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileManager: {fileID: 977690747}
   _spawnData:
-  - EntityGO: {fileID: 7274492085769915217, guid: d4d1ac36f2ade8447b78bc0ff30a10cc, type: 3}
+  - EntityGO: {fileID: 6471617640893553020, guid: e1b3c958b6576294a977db5d84984f2f, type: 3}
     GridPosition: {x: 2, y: 2}
-  - EntityGO: {fileID: 7274492085769915217, guid: d43e2ba8072ff3d43a428b566c876ef4, type: 3}
+  - EntityGO: {fileID: 3839302173390268812, guid: 6a0c97faf35f9954981c1acc754fdc6e, type: 3}
     GridPosition: {x: 5, y: 0}
 --- !u!1 &1862930495
 GameObject:

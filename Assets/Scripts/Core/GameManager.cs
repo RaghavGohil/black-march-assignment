@@ -8,10 +8,8 @@ namespace Game
     public class GameManager : MonoBehaviour
     {
         public enum GameState { PlayerTurn, EnemyTurn, Waiting }
-        public GameState State;
-
-        [HideInInspector] public UnityEvent OnPlayerTurn;
-        [HideInInspector] public UnityEvent OnEnemyTurn;
+        private GameState _state;
+        public GameState State => _state;
 
         public static GameManager Instance;
 
@@ -29,32 +27,17 @@ namespace Game
 
         private void Start()
         {
-            State = GameState.PlayerTurn;
-        }
-
-        private void Update()
-        {
-            if (State == GameState.PlayerTurn)
-            {
-                OnPlayerTurn?.Invoke();
-            }
-            else if (State == GameState.EnemyTurn)
-            {
-                StartCoroutine(EnemyTurn());
-            }
+            _state = GameState.PlayerTurn;
         }
 
         public void EndPlayerTurn()
         {
-            State = GameState.EnemyTurn;
+            _state = GameState.EnemyTurn;
         }
 
-        private IEnumerator EnemyTurn()
+        public void EndEnemyTurn()
         {
-            State = GameState.Waiting;
-            yield return new WaitForSeconds(1f);
-            OnEnemyTurn?.Invoke();
-            State = GameState.PlayerTurn;
+            _state = GameState.PlayerTurn;
         }
     }
 }

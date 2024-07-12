@@ -11,6 +11,7 @@ namespace Game.Entity
     {
 
         private TileInput _tileInput;
+        private Tile.Tile _nextTile;
 
         private new void Start()
         {
@@ -24,28 +25,53 @@ namespace Game.Entity
                 enabled = false; // Fail early.
             }
 
-            _tileInput.OnTileClick.AddListener(MoveToTile);
+            _tileInput.OnTileClick.AddListener(GetTileOnClick);
+            _nextTile = null;
+        }
+
+        private void Update()
+        {
+            if (GameManager.Instance.State == GameManager.GameState.PlayerTurn && !_isMoving)
+            {
+                if (_nextTile != null && _currentTile != _nextTile) 
+                {
+                    MoveToTile(_nextTile);
+                    _nextTile = null;
+                }
+            }
+        }
+
+        private void GetTileOnClick(Tile.Tile tile) 
+        {
+            _nextTile = tile;   
         }
 
         public override IEnumerator Move(Tile.Tile tile, List<Tile.Tile> moves) 
         {
+
+            _isMoving = true;
+
+            Vector3 currentPosition = transform.position;
+
             foreach (var move in moves)
             {
                 float elapsedTime = 0;
                 while (elapsedTime < _moveDuration)
                 {
                     transform.position = Vector3.Lerp(
-                        _currentTile.GridPosition,
-                        new Vector3(move.GridPosition.x, transform.position.y, move.GridPosition.z),
+                        currentPosition,
+                        new Vector3(move.GridPosition.x, move.GridPosition.y + _transformYOffset, move.GridPosition.z),
                         elapsedTime / _moveDuration);
                     elapsedTime += Time.deltaTime;
                     yield return null; // Wait until the next frame
                 }
+                currentPosition = new Vector3(move.GridPosition.x, move.GridPosition.y + _transformYOffset, move.GridPosition.z);
                 _currentTile = move;
             }
 
-            GameManager.Instance.State = GameManager.GameState.EnemyTurn;
+            _isMoving = false;
 
+            GameManager.Instance.EndPlayerTurn();
         }
 
         private void OnDestroy()

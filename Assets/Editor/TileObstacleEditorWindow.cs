@@ -3,6 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 using Game.Obstacle;
+using UnityEditor.PackageManager.UI;
 
 public class TileObstacleEditorWindow : EditorWindow
 {
@@ -42,6 +43,7 @@ public class TileObstacleEditorWindow : EditorWindow
 
         if (GUILayout.Button("Save Obstacle Data"))
         {
+            EditorUtility.SetDirty(_obstacleData);
             AssetDatabase.SaveAssets();
         }
 
