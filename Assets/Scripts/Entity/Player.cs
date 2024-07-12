@@ -30,6 +30,8 @@ namespace Game.Entity
 
             _tileInput.OnTileClick.AddListener(GetTileOnClick);
             _nextTile = null;
+
+            ResetTile(_currentTile);
         }
 
 
@@ -70,16 +72,35 @@ namespace Game.Entity
         /// </summary>
         /// <param name="moves">Gets the moves from the pathfinder ai from MoveToTile</param>
         /// <returns></returns>
-        public override IEnumerator Move(List<Tile.Tile> moves) 
+        public override IEnumerator MoveAI(List<Tile.Tile> moves)
         {
-
             _isMoving = true;
 
             Vector3 currentPosition = transform.position;
 
             foreach (var move in moves)
             {
+                // Calculate target rotation towards the next tile
+                Vector3 direction = new Vector3(move.GridPosition.x, 0, move.GridPosition.z) - new Vector3(transform.position.x, 0, transform.position.z);
+                Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+
                 float elapsedTime = 0;
+
+                /********* Rotate the player to the path *********/
+                if (targetRotation != transform.rotation)
+                {
+                    while (elapsedTime < _rotationDuration) // Also rotate the player
+                    {
+                        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, elapsedTime / _rotationDuration);
+                        elapsedTime += Time.deltaTime;
+                        yield return null;
+                    }
+                    transform.rotation = targetRotation; // Ensure exact rotation at the end
+                }
+
+                elapsedTime = 0;
+
+                /********* Move the player to the path *********/
                 while (elapsedTime < _moveDuration)
                 {
                     transform.position = Vector3.Lerp(
@@ -89,7 +110,10 @@ namespace Game.Entity
                     elapsedTime += Time.deltaTime;
                     yield return null; // Wait until the next frame
                 }
-                currentPosition = new Vector3(move.GridPosition.x, move.GridPosition.y + _aboveTileYOffset, move.GridPosition.z);
+
+                // Ensure exact position at the end of the movement
+                transform.position = new Vector3(move.GridPosition.x, move.GridPosition.y + _aboveTileYOffset, move.GridPosition.z);
+                currentPosition = transform.position;
                 _currentTile = move;
             }
 
@@ -97,6 +121,7 @@ namespace Game.Entity
 
             GameManager.Instance.EndPlayerTurn();
         }
+
 
         private void OnDestroy()
         {

@@ -3,6 +3,7 @@ using Game.Tile;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using Game.AI;
 
 namespace Game.Entity 
 {
@@ -16,7 +17,8 @@ namespace Game.Entity
         /// <summary>
         /// The duration required to move to next tile.
         /// </summary>
-        protected float _moveDuration;
+        [SerializeField] protected float _moveDuration;
+        [SerializeField] protected float _rotationDuration;
 
         protected bool _isMoving = false;
 
@@ -29,7 +31,7 @@ namespace Game.Entity
 
         protected void Start()
         {
-            _tileManager = FindFirstObjectByType<TileManager>();
+            _tileManager = FindFirstObjectByType<TileManager>(); // Since the object is spawned, it's better to find it in hierarchy.
 
             if (_tileManager == null)
             {
@@ -37,11 +39,10 @@ namespace Game.Entity
                 enabled = false;
             }
 
-            _pathfinder = new AI.Pathfinder(_tileManager);
+            _pathfinder = new AI.Pathfinder(_tileManager); // Initializes the AI pathfinder.
 
 
             //Entity data
-            _moveDuration = 0.5f;
 
             //Spawn with a y offset above tile.
             transform.position = new Vector3(_currentTile.GridPosition.x, _currentTile.GridPosition.y + _aboveTileYOffset, _currentTile.GridPosition.z);
@@ -58,7 +59,7 @@ namespace Game.Entity
             List<Tile.Tile> moves = _pathfinder.FindPath(_currentTile, tile); //Do algorithm, find path..
             if (moves != null) 
             {
-                StartCoroutine(Move(moves));
+                StartCoroutine(MoveAI(moves));
             }
         }
 
@@ -72,7 +73,7 @@ namespace Game.Entity
             tile.TileState = TileState.Walkable;
         }
 
-        public virtual IEnumerator Move(List<Tile.Tile> moves) { yield return null; } // overridden by implementation
+        public virtual IEnumerator MoveAI(List<Tile.Tile> moves) { yield return null; } // overridden by implementation
     }
 }
 

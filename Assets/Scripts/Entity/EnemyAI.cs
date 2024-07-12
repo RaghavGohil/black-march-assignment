@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Game.Entity 
 {
-    public class Enemy : Entity, IAI
+    public class EnemyAI : Entity, IAI
     {
 
         private Player _player;
@@ -35,7 +35,7 @@ namespace Game.Entity
             if (GameManager.Instance.State == GameManager.GameState.EnemyTurn && !_isMoving) 
             {
                 MoveToTile(_player.CurrentTile);
-            }   
+            }
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Game.Entity
         /// <param name="tile">gets the tile from the MoveToTile function</param>
         /// <param name="moves"></param>
         /// <returns></returns>
-        public override IEnumerator Move(List<Tile.Tile> moves)
+        public override IEnumerator MoveAI(List<Tile.Tile> moves)
         {
             if (moves.Count <= 1)
             {
@@ -57,20 +57,39 @@ namespace Game.Entity
                 yield break;
             }
 
-            ResetTile(_currentTile);
-
             _isMoving = true;
 
+            ResetTile(_currentTile);
 
+            /********* Rotate the enemy to the path *********/
+
+            Quaternion targetRotation;
+            
             float elapsedTime = 0;
-            while (elapsedTime < _moveDuration && _currentTile != moves[moves.Count - 2])
+
+            targetRotation  = Quaternion.LookRotation(new Vector3(moves[0].GridPosition.x, 0, moves[0].GridPosition.z)
+                                                                - new Vector3(transform.position.x, 0, transform.position.z), Vector3.up);
+
+            while (elapsedTime < _rotationDuration)
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, elapsedTime / _rotationDuration);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            /********* Move the enemy *********/
+
+            elapsedTime = 0;
+
+            while (elapsedTime < _moveDuration)
             {
                 transform.position = Vector3.Lerp(
                     transform.position,
                     new Vector3(moves[0].GridPosition.x, moves[0].GridPosition.y + _aboveTileYOffset, moves[0].GridPosition.z),
                     elapsedTime / _moveDuration);
+
                 elapsedTime += Time.deltaTime;
-                yield return null; // Wait until the next frame
+                yield return null;
             }
 
             _currentTile = moves[0];
