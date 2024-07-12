@@ -1,15 +1,24 @@
+/*
+ * A tool for unity editor to edit tile obstacles in game.
+ * 
+ * Generates an ObstacleData asset for unity with given size
+ * or loads an asset for editing.
+ * 
+ * Creates toggleable buttons to edit.
+ */
+
 #if UNITY_EDITOR
 
 using UnityEngine;
 using UnityEditor;
 using Game.Obstacle;
-using UnityEditor.PackageManager.UI;
 
 public class TileObstacleEditorWindow : EditorWindow
 {
-    private uint _gridSize;
+    private uint _gridSize = 10; // Default grid size for the tool
     private ObstacleDataSO _obstacleData;
     private bool _obstacleDataInitialized;
+    private ObstacleDataSO _obstacleDataField;
 
     [MenuItem("Window/Tile Obstacle Editor")]
     public static void ShowWindow()
@@ -21,26 +30,35 @@ public class TileObstacleEditorWindow : EditorWindow
     {
         GUILayout.Label("Tile Obstacle Editor", EditorStyles.boldLabel);
 
-        if (_obstacleData == null)
+        if (_obstacleDataInitialized)
+            DrawButtons();
+        else
+            DrawUninitialized();
+    }
+
+    private void DrawUninitialized()
+    {
+        EditorGUILayout.BeginVertical();
+
+        _gridSize = (uint)Mathf.Clamp(EditorGUILayout.IntField("Grid Size", (int)_gridSize), 1, int.MaxValue);
+
+        if (GUILayout.Button("Create New Obstacle Data"))
         {
-            EditorGUILayout.BeginVertical();
-            _gridSize = (uint)Mathf.Clamp(EditorGUILayout.IntField("Grid Size", (int)_gridSize), 1, int.MaxValue);
-
-            if (GUILayout.Button("Create New Obstacle Data"))
-            {
-                CreateNewObstacleData();
-            }
-
-            EditorGUILayout.EndVertical();
-            return;
+            CreateNewObstacleData();
         }
 
-        if (!_obstacleDataInitialized)
+        _obstacleDataField = (ObstacleDataSO)EditorGUILayout.ObjectField("Obstacle Data", _obstacleDataField, typeof(ObstacleDataSO), false);
+
+        if (_obstacleDataField != null && GUILayout.Button("Load Data"))
         {
-            _gridSize = (uint)Mathf.Sqrt(_obstacleData.obstacles.Length);
-            _obstacleDataInitialized = true;
+            LoadObstacleData(_obstacleDataField);
         }
 
+        EditorGUILayout.EndVertical();
+    }
+
+    private void DrawButtons()
+    {
         if (GUILayout.Button("Save Obstacle Data"))
         {
             EditorUtility.SetDirty(_obstacleData);
@@ -58,7 +76,10 @@ public class TileObstacleEditorWindow : EditorWindow
             for (int x = 0; x < _gridSize; x++)
             {
                 int index = y * (int)_gridSize + x;
-                obstaclesProperty.GetArrayElementAtIndex(index).boolValue = GUILayout.Toggle(obstaclesProperty.GetArrayElementAtIndex(index).boolValue, "");
+                if (index < obstaclesProperty.arraySize)
+                {
+                    obstaclesProperty.GetArrayElementAtIndex(index).boolValue = GUILayout.Toggle(obstaclesProperty.GetArrayElementAtIndex(index).boolValue, "");
+                }
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -74,6 +95,13 @@ public class TileObstacleEditorWindow : EditorWindow
         AssetDatabase.SaveAssets();
 
         _obstacleData = newObstacleData;
+        _obstacleDataInitialized = true;
+    }
+
+    private void LoadObstacleData(ObstacleDataSO data)
+    {
+        _obstacleData = data;
+        _gridSize = (uint)Mathf.Sqrt(_obstacleData.obstacles.Length);
         _obstacleDataInitialized = true;
     }
 }
